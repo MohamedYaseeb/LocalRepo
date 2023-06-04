@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_inherit_stock_picking_form_temp" model="ir.ui.view">
+        <field name="name">sale.picking.form.discount</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_dest_id']" position="after">
+                <field name="tag_ids_name"  string="Tag" />
+                <field name="for_ids_name"  string="For"/>
+                <field name="origin_generator"  string="Origin Generator" invisible="True"/>
+                <field name="generated_id_no"  string="ID SO Generator" invisible="True"/>
+                <field name="auto_generated"  string="PO" invisible="True"/>
+                <field name="visibil_state"  string="Visible" invisible="True"/>
+                <field name="branch_generated"  string="Branch state" invisible="True"/>
+                <field name="generate_state"  string="G Visible" invisible="True"/>
+                <field name="generate_is_clicked"  string="G Clicked" invisible="True"/>
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="after">
+                <button name="generate_internal_transfer"  string="Generate Transfer" confirm="Are You Sure You Want to Generate Internal Transfer?" attrs="{'invisible':['|',('generate_state','=',False),('generate_is_clicked','=',True)]}" class="oe_highlight" type="object"/>
+                <button name="set_move_quantities" type="object" string="Confirm Quantities" attrs="{'invisible':[('visibil_state','=',False)]}" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//button[@name='action_set_quantities_to_reservation']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('branch_generated', '=', True)]}</attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='action_toggle_is_locked']" position="replace">
+                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('state', 'in', ('draft','cancel')), ('is_locked', '=', False)]}" string="Unlock" groups="base.group_erp_manager" type="object" help="If the picking is unlocked you can edit initial demand (for a draft picking) or done quantities (for a done picking)." data-hotkey="l"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="after">
+                <field name="po_comment"  string="Comment" />
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <record id="view_inherit_stock_picking_detailed_tree" model="ir.ui.view">
+        <field name="name">stock.picking.line.detailed.tree.inheritance</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="po_comment" string="Comment"/>
+            </xpath>
+        </field>
+    </record>
+
+
+
+    <record id="view_inherit_stock_backorder_confirmation_wizard" model="ir.ui.view">
+        <field name="name">stock.stock.backorder.confirmation.inheritance</field>
+        <field name="model">stock.backorder.confirmation</field>
+        <field name="inherit_id" ref="stock.view_backorder_confirmation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='process']" position="replace">
+                <button name="validated_process" string="Create A BackOrder" type="object" class="oe_highlight" data-hotkey="q"/>
+            </xpath>
+        </field>
+    </record>
+
+
+
+    <record id="view_inherit_stock_picking_kanban" model="ir.ui.view">
+        <field name="name">stock.stock.picking.inheritance</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.stock_picking_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="for_ids_name"/>
+            </xpath>
+            <xpath expr="//div[1]/div[2]/div[2]" position="inside">
+                    For : <t t-esc="record.for_ids_name.value"/>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>
+
+

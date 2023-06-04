@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="action_related_picking_tree_all_inherit" model="ir.actions.act_window">
+            <field name="name">Related Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('generated_id_no', '=', active_id)]</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No transfer found. Let's create one!
+                </p>
+                <p>
+                    Transfers allow you to move products from one location to another.
+                </p>
+            </field>
+        </record>
+
+
+        <record id="inherit_view_sale_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form.discount</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="tag_ids_name" string="Tag ID"/>
+                    <field name="for_ids_name" string="For"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                    <field name="vendor_price" string="Vendor Price" invisible="True"/>
+                    <field name="po_comment" string="Branch Comment"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="inherit_view_sale_stock_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form.stock</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_delivery']" position="replace">
+                    <button type="action"
+                            name="%(action_related_picking_tree_all_inherit)d"
+                            class="oe_stat_button"
+                            icon="fa-truck"
+                            attrs="{'invisible': [('delivery_counted', '=', 0)]}" groups="stock.group_stock_user">
+                        <field name="delivery_counted" widget="statinfo" string="My Delivery"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="inherit_view_sale_order_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree.discount</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="tag_ids_name" string="Tag ID"/>
+                    <field name="for_ids_name" string="For"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="inherit_view_stock_picking_tree" model="ir.ui.view">
+            <field name="name">stock.picking.tree.discount</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='location_dest_id']" position="after">
+                    <field name="tag_ids_name" string="Tag ID"/>
+                    <field name="for_ids_name" string="For"/>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+
+</odoo>
+
+

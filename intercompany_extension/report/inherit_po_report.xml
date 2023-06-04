@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <template inherit_id="purchase.report_purchaseorder_document" id="inherited_purchase_order_report_template">
+            <xpath expr="//t/div[hasclass('page')]/table/tbody/t[2]/tr/t[1]/td[5]" position="replace">
+                <td class="text-right">
+                    <span t-field="line.price_unit" groups="base.group_erp_manager"/>
+                </td>
+            </xpath>
+            <xpath expr="//t/div[hasclass('page')]/table/tbody/t[2]/tr/t[1]/td[6]" position="replace">
+                <td class="text-right">
+                     <span t-field="line.price_subtotal" groups="base.group_erp_manager" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </td>
+            </xpath>
+            <xpath expr="//t/div[hasclass('page')]/table/tbody/t[2]/t[3]/tr" position="replace">
+                <tr class="is-subtotal text-right">
+                    <td colspan="99" id="subtotal">
+                        <strong class="mr16">Subtotal</strong>
+                        <span
+                                t-esc="current_subtotal"
+                                groups="base.group_erp_manager"
+                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                        />
+                    </td>
+                </tr>
+            </xpath>
+
+            <xpath expr="//t/div[hasclass('page')]/div[@id='total']/div/table/t[1]" position="replace">
+                   <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)" groups="base.group_erp_manager"/>
+            </xpath>
+            <xpath expr="//t/div[hasclass('page')]/div[@id='total']/div/table/t[2]" position="replace">
+                <t t-call="account.document_tax_totals" groups="base.group_erp_manager"/>
+            </xpath>
+        </template>
+
+
+        <template inherit_id="stock.report_picking" id="inherited_stock_pick_report_template">
+            <xpath expr="//t/div[hasclass('page')]/div[3]/div[3]" position="after">
+                <div class="col-auto" name="div_for_company">
+                    <strong>For:</strong>
+                    <p t-field="o.for_ids_name"/>
+                </div>
+            </xpath>
+            <xpath expr="//t/div[hasclass('page')]/table/thead/tr/th[1]" position="after">
+                <th>
+                    <strong>Comment</strong>
+                </th>
+            </xpath>
+            <xpath expr="//t/div[hasclass('page')]/table/tbody/t/tr/td[1]" position="after">
+                <td>
+                    <span t-field="ml.po_comment"/>
+                </td>
+            </xpath>
+        </template>
+
+        <template inherit_id="stock.report_delivery_document" id="inherited_delivery_slip_report_template">
+            <xpath expr="//t/div[hasclass('page')]/div[2]/div[2]" position="after">
+                <div t-if="o.state" class="col-auto" name="div_for_slip_name">
+                    <strong>For :</strong>
+                    <t t-if="o.for_ids_name">
+                        <p t-field="o.for_ids_name"/>
+                    </t>
+                </div>
+            </xpath>
+
+            <xpath expr="//t/div[hasclass('page')]/div[1]" position="before">
+                <div class="row justify-content-end mb16">
+                    <div class="col-4" name="right_box">
+                        <div t-field="o.name"
+                             t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;'}"/>
+                    </div>
+                </div>
+            </xpath>
+
+        </template>
+
+    </data>
+</odoo>
+
+

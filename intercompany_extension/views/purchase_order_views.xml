@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="purchase_order_form_quote" model="ir.ui.view">
+        <field name="name">purchase.order.form.payment</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page/field[@name='order_line']/.." position="after">
+                <page string="Optional Products" name="optional_products" attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}">
+                    <field name="purchase_order_option_ids" mode="tree,form,kanban">
+                        <form string="Optional Products">
+                            <group>
+                                <field name="product_id" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                <field name="name"/>
+                                <field name="quantity"/>
+                                <field name="product_uom_category_id" invisible="1"/>
+                                <field name="uom_id" groups="uom.group_uom"/>
+                                <field name="price_unit" invisible="1"/>
+                                <field name="discount" groups="product.group_discount_per_so_line"/>
+                                <field name="is_present" />
+                            </group>
+                        </form>
+                        <kanban class="o_kanban_mobile">
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="uom_id" groups="uom.group_uom"/>
+                            <field name="price_unit" invisible="1"/>
+                            <field name="is_present" />
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <strong>
+                                                    <span>
+                                                        <t t-esc="record.product_id.value"/>
+                                                    </span>
+                                                </strong>
+                                            </div>
+                                            <div class="col-2">
+                                                <button name="button_add_to_order" class="btn btn-link oe_link fa fa-shopping-cart" title="Add to order lines" type="object" attrs="{'invisible': [('is_present', '=', True)]}"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 text-muted">
+                                                <span>
+                                                    Quantity:
+                                                    <t t-esc="record.quantity.value"/>
+                                                    <t t-esc="record.uom_id.value"/>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+
+<!--                                        </div>-->
+
+<!--                                        <div class="row">-->
+<!--                                            <div class="col-12 text-muted">-->
+<!--                                                <span>-->
+<!--                                                    Unit Price:-->
+<!--                                                    <t t-esc="record.price_unit.value" invisible="1"/>-->
+<!--                                                </span>-->
+<!--                                            </div>-->
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <tree string="Purchase Quotation Template Lines" editable="bottom" decoration-success="is_present == True">
+                            <control>
+                                <create name="add_product_control" string="Add a product"/>
+                            </control>
+                            <field name="sequence" widget="handle"/>
+                            <field name="product_id" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                            <field name="name" optional="show"/>
+                            <field name="quantity"/>
+                            <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                            <field name="product_uom_category_id" invisible="1"/>
+                            <field name="price_unit"/>
+                            <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show"/>
+                            <field name="is_present" invisible="1" />
+                            <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" title="Add to order lines" type="object" attrs="{'invisible': [('is_present', '=', True)]}"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="purchase_order_template_id" context="{'company_ids': company_id}"
+                    options="{'no_create': True, 'no_open': True}"/>
+                <field name="tag_ids_name" string="Tag"/>
+                <field name="for_ids_name" string="For " />
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="replace">
+                <field name="partner_id" string="Vendor Name" options="{'no_create': True, 'no_create_edit':True}"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="user_is_cost_viewer" string="Cost Viewer" invisible="True"/>
+                <field name="vendor_price" string="Vendor  Price" invisible="True"/>
+                <field name="po_comment" string="Branch Comment"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'invisible': [ ('user_is_cost_viewer','=',False)], 'readonly' : False}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="attributes">
+                <attribute name="attrs">{'invisible': [ ('user_is_cost_viewer','=',False)]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="user_is_cost_viewer" string="Cost Viewer" invisible="True"/>
+            </xpath>
+
+            <xpath expr="//field[@name='tax_totals_json']" position="attributes">
+                <attribute name="attrs">{'invisible': [ ('user_is_cost_viewer','=',False)]}</attribute>
+            </xpath>
+
+
+<!--            <xpath expr="//page[@name='products']/field[@name='order_line']/kanban/field[@name='price_unit']" position="replace">-->
+<!--                <field name="partner_id" string="Vendor Name" options="{'no_create': True, 'no_create_edit':True}"/>-->
+<!--            </xpath>  -->
+
+
+
+        </field>
+
+
+    </record>
+
+    <record id="inherit_view_purchase_order_tree" model="ir.ui.view">
+        <field name="name">purchase.order.tree.discount</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="tag_ids_name" string="Tag ID"/>
+                <field name="for_ids_name" string="For"/>
+                <field name="date_approve" string="For"/>
+                <field name="user_is_cost_viewer" string="Cost Viewer" invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_untaxed']" position="attributes">
+                <attribute name="attrs">{'invisible': [ ('user_is_cost_viewer','=',False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_total']" position="attributes">
+                <attribute name="attrs">{'invisible': [ ('user_is_cost_viewer','=',False)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_action_quotations" model="ir.actions.act_window">
+        <field name="name">Quotation Template</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.order.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new Purchase!
+            </p>
+            <p>
+                Once the quotation is confirmed by the customer, it becomes a Purchase order.
+                <br/>
+                You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_purchase_Template_action"
+              action="purchase_action_quotations"
+              parent="purchase.menu_purchase_config" sequence="1"/>
+</odoo>
+

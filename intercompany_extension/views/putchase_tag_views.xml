@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="purchase_template_tag_view_form" model="ir.ui.view">
+            <field name="name">Tags</field>
+            <field name="model">template.tag</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="color" widget="color"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="purchase_template_tag_view_tree" model="ir.ui.view">
+            <field name="name">Tags</field>
+            <field name="model">template.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tags">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="purchase_template_tag_view_search" model="ir.ui.view">
+            <field name="name">purchase.template.tag.view.search</field>
+            <field name="model">template.tag</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="purchase_template_tags_action" model="ir.actions.act_window">
+            <field name="name">Template Tag</field>
+            <field name="res_model">template.tag</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No Purchase Template Tags
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Tags" parent="purchase.menu_purchase_config" id="purchas_template_menu"
+                  action="purchase_template_tags_action" sequence="4"/>
+
+
+    </data>
+</odoo>

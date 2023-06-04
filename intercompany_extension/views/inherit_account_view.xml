@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <record id="view_account_move_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date_due']" position="after">
+                <field name="tag_ids_name" string="Tags"/>
+                <field name="for_ids_name" string="For"/>
+            </xpath>
+        </field>
+    </record>
+
+
+
+    <record id="view_account_move_bill_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.bill.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_bill_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date_due']" position="after">
+                <field name="tag_ids_name" string="Tags"/>
+                <field name="for_ids_name" string="For"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_account_move_line_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.line.tree.inherit</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                 <field name="for_ids_name" string="For"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_move_bank_statement_form_inherit" model="ir.ui.view">
+        <field name="name">account.bank.statement.form.inherit</field>
+        <field name="model">account.bank.statement</field>
+        <field name="inherit_id" ref="account.view_bank_statement_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="replace">
+                 <field name="name" string="Name" placeholder="e.g. CSH/23/000001" readonly="True" groups="base.group_erp_manager"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="seq_bank_cash_journals" model="ir.sequence">
+        <field name="name">Cash Journals</field>
+        <field name="code">cash.journal</field>
+        <field name="prefix">CSH/%(y)s/</field>
+        <field name="padding">7</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+
+</odoo>
