@@ -7,7 +7,7 @@ class InheritAccountMove(models.Model):
 
     _inherit = 'account.move'
     _description = 'Account Move'
-    
+
 
     tag_ids = fields.Many2many('template.tag', string='Tag', compute='compute_fields_value')
     tag_ids_name = fields.Char(string='Tag Name', related='tag_ids.name')
