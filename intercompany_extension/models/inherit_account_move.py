@@ -13,6 +13,7 @@ class InheritAccountMove(models.Model):
     tag_ids_name = fields.Char(string='Tag Name', related='tag_ids.name')
     for_ids = fields.Many2many('res.company', string='For ID', compute='compute_fields_value')
     for_ids_name = fields.Char(string='For Name', related='for_ids.name')
+    tags = fields.Char()
 
 
 
