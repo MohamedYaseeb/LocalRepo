@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="stock_valuation_view_inherited" model="ir.ui.view">
+        <field name="name">stock.valuation.view.form.inherited</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="inherit_id" ref="stock_account.stock_valuation_layer_tree"/>
+        <field name="arch" type="xml" >
+            <xpath expr="//field[@name='value']" position="before">
+                <field name="origin_document" string="Source Document" decoration-danger="is_bonus==True"/>
+            </xpath>
+            <xpath expr="//field[@name='value']" position="before">
+                <field name="partner_name" string="Customer / Vendor" decoration-danger="is_bonus==True"/>
+            </xpath>
+            <xpath expr="//field[@name='quantity']" position="replace">
+                <field name="list_price" string="Sale Price" decoration-danger="is_bonus==True"/>
+            </xpath>
+            <xpath expr="//field[@name='list_price']" position="before">
+                <field name="cost_price" string="Cost Price" decoration-danger="is_bonus==True"/>
+            </xpath>
+            <xpath expr="//field[@name='value']" position="before">
+                <field name="invoice_name" string="Source Invoice" decoration-danger="is_bonus==True"/>
+            </xpath>
+            <xpath expr="//field[@name='value']" position="before">
+                <field name="lot_name" string="Lot Name" decoration-danger="is_bonus==True"/>
+            </xpath>
+            <xpath expr="//field[@name='value']" position="before">
+                <field name="expiration_date" string="Expiry Date" decoration-danger="is_bonus==True"/>
+            </xpath>
+            <xpath expr="//field[@name='value']" position="before">
+                <field name="is_bonus" string="Is Bonus" widget="boolean_toggle"/>
+            </xpath>
+            <xpath expr="//field[@name='value']" position="before">
+                <field name="is_so" string="Out" decoration-danger="is_bonus==True"/>
+            </xpath>
+            <xpath expr="//field[@name='value']" position="before">
+                <field name="is_po" string="In" decoration-danger="is_bonus==True"/>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem
+            name='Stock Value Report'
+            action="stock_account.stock_valuation_layer_action"
+            id="stock_value_report"
+            parent="stock.menu_warehouse_report"
+            sequence='6'/>
+</odoo>
